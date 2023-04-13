@@ -29,6 +29,7 @@ def get_User():
     json_data = dumps(list_record)
     dataInserimento = str(datetime.datetime.now())
     return {"response": json_data , "dataInserimento": dataInserimento}
+    
 
 
 @app.post("/addUser")
