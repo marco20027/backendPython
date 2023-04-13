@@ -19,7 +19,7 @@ myUser = {"name": "marco", "cognome": "campanale", "dataNascita": "07-12-2002", 
 #x = collection.insert_one(myUser)
 print(myUser)
 
-data = datetime.datetime.now()
+data = datetime.datetime
 print( data)
 
 @app.get("/getUser")
@@ -33,14 +33,17 @@ def get_User():
 
 
 @app.post("/addUser")
-def add_user(name: str, cognome: str, dataNascita : str , maggiorenne : bool):
+def add_user(name: str, cognome: str, dataNascita : datetime.datetime):
+    currentDate  = datetime.datetime.today().year
+    eta = currentDate - dataNascita.year
+    if eta >=  18: 
+        maggiorenne = True
+    else:
+        maggiorenne = False    
     queryAdd = {"name":name, "cognome": cognome, "dataNascita": dataNascita, "maggiorenne":maggiorenne,"dataInserimento" : datetime.datetime.now()}
     addRecord = collection.insert_one(queryAdd)
-    print(collection.count_documents({}))
-    print(addRecord.inserted_id)
     id = str(addRecord.inserted_id)
     dataInserimento = str(datetime.datetime.now())
-    json_compatible_item_data = {"id" : jsonable_encoder(id), "dataInserimetno": dataInserimento}
-    print(json_compatible_item_data)
+    json_compatible_item_data = {"id" : jsonable_encoder(id), "dataInserimetno": dataInserimento , "maggiorenne": maggiorenne}
     return JSONResponse(content=json_compatible_item_data) 
 
