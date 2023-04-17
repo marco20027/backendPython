@@ -20,7 +20,7 @@ myUser = {"name": "marco", "cognome": "campanale", "dataNascita": "07-12-2002", 
 print(myUser)
 
 data = datetime.datetime
-print( data)
+
 
 @app.get("/getUser")
 def get_User(name: str = None, cognome : str = None):
@@ -68,3 +68,4 @@ def add_user(name: str, cognome: str, dataNascita : datetime.datetime):
     dataInserimento = str(datetime.datetime.now())
     json_compatible_item_data = {"id" : jsonable_encoder(id), "dataInserimento": dataInserimento }
     return JSONResponse(content=json_compatible_item_data) 
+
