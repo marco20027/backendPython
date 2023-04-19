@@ -110,14 +110,23 @@ def numMax2(n1:int, n2:int):
 
 @app.get("/sommaArray")
 def sommaArray(n1:int):
-    list = range(0,n1)
-    print(list)
-    if list < 0:
-        resultN = sum(list)
-        return {"responseNegative": resultN}
-    else:
+    start = 0
+    end = n1
+    list = range(start, end)
+    sorted(list)
+    print(sorted(list))
+    if n1 > 0:
         result = sum(list)
         return {"responsePositive": result}
+    else:
+        start = n1
+        end = 0
+        list = range(start,end)
+        sorted(list)
+        print(list)
+        resultN = sum(list) - start
+        return {"responseNegative": resultN}
+       
 
 
 
@@ -140,31 +149,68 @@ def pagamento(n:float, prezzoProdotto: float):
     resto = n - prezzoProdotto
     if resto >= 200:
         banconotaResto = (n-prezzoProdotto)/200
-        return {"banconote": banconotaResto ,"banconota":  "da 200 euro"}
+        return {"banconote": banconotaResto ,"banconotaRicevente":  "da 200 euro"}
     elif resto >= 100:
         banconotaResto = (n-prezzoProdotto)/100
-        return {"test": banconotaResto , "banconota": "da 100 euro"}
+        return {"test": banconotaResto , "banconotaRicevente": "da 100 euro"}
     elif resto >= 50:
         banconotaResto = (n-prezzoProdotto)/50
-        return {"banconote": banconotaResto, "banconota": "da 50 euro"}
+        return {"banconote": banconotaResto, "banconotaRicevente": "da 50 euro"}
     elif resto >= 20:
         banconotaResto = (n-prezzoProdotto)/20
-        return {"banconote": banconotaResto ,"banconota": "da 20 euro"}
-    elif resto >= 10:
+        return {"banconote": banconotaResto ,"banconotaRicevente": "da 20 euro"}
+    elif resto >= 10 and resto < 20:
         banconotaResto = (n-prezzoProdotto)/10
-        return {"banconote": banconotaResto ,"banconota":  "da 10 euro"}
+        restoRimanente = resto - 10
+        output = "da 10€" + " "+"e da "+" "+ str(restoRimanente)+"€" 
+        if resto == 15:
+            restoRimanente = 1
+        return {"banconote": 1 ,"banconota2":restoRimanente,"banconotaRicevente":  output}
+    elif resto >= 5 and resto <=9:
+        banconotaResto = (n-prezzoProdotto)/5
+        print(banconotaResto)
+        restoRimanente = resto - 5
+        output = "da 5€" + " "+"e da "+" "+ str(restoRimanente)+"€"
+        print(output) 
+        if restoRimanente >= 3 and restoRimanente<5:
+            if restoRimanente == 3:
+                restoRimanente = 2
+                output = "da 5€" + " "+"e da "+"2.0€ e 1.0€ "
+            else :
+                restoRimanente = 2
+                output = "da 5€" + " "+"e da "+"2.0€ e 2.0€ "
+        return {"banconota1": 1,"banconota2":restoRimanente ,"banconotaRicevente": output}
+    elif resto == 4:
+        banconotaResto = (n-prezzoProdotto)/2
+        output = "da 2€"
+        return {"banconota": banconotaResto, "banconotaRicevente": output}
     elif resto >= 2 and resto <=3:
         banconotaResto = (n-prezzoProdotto)/2
         banconotaResto2 = int(banconotaResto) + 1
-        print(banconotaResto)
         if banconotaResto >= 1.5:
             banconota = "da 2 euro e 1 euro"
         else :
             banconotaResto2 = banconotaResto
             banconota = "da 2 euro"
-        return {"banconote": banconotaResto2,  "banconota":  banconota}
+        return {"banconote": banconotaResto2,  "banconotaRicevente":  banconota}
 
-    elif resto >= 1:
+    elif resto >= 1 and resto < 2:
         banconotaResto = (n-prezzoProdotto)/1
         return {"banconote": banconotaResto,"banconota":  "da 1 euro"}
+   
+    
+@app.delete("/deleteUser")
+def deleteUSer(id):
+    myquery = {"_id": id}
+    collection.delete_one(myquery)
+    return {"user eliminato": myquery}
 
+@app.put("/updateUser")
+def updateUser(id):
+    myquery = {"cognome": "campanale"}
+    queryUpdate = {"$set":{"cognome": "campa"}}
+    collection.update_one(myquery,queryUpdate)
+    return {"dato aggiornato": queryUpdate}
+
+f = open("myfile.txt","r")
+print(f.read())
