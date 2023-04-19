@@ -163,8 +163,20 @@ def pagamento(n:float, prezzoProdotto: float):
         banconotaResto = (n-prezzoProdotto)/10
         restoRimanente = resto - 10
         output = "da 10€" + " "+"e da "+" "+ str(restoRimanente)+"€" 
+        if resto >= 11 and resto < 15:
+            restoRimanente = resto - 10
+            output = "da 10€" + " "+"e da "+" "+ str(restoRimanente)+"€" 
         if resto == 15:
             restoRimanente = 1
+        elif resto > 15 and resto <= 16:
+            restoRimanente = 2 
+            output = "da 10€"+ " "+"e da "+" "+ "5.0 e 1.0€"
+        elif resto == 17:
+            restoRimanente = 2
+            output = "da 10€"+ " "+"e da "+" "+ "5.0 e 2.0€"
+        elif resto == 18:
+            restoRimanente = 3
+            output = "da 10€"+ " "+"e da "+" "+ "5.0 e 2.0€ e 1.0€"
         return {"banconote": 1 ,"banconota2":restoRimanente,"banconotaRicevente":  output}
     elif resto >= 5 and resto <=9:
         banconotaResto = (n-prezzoProdotto)/5
