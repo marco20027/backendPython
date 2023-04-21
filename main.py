@@ -12,6 +12,9 @@ import datetime
 from functools import reduce
 from operator import mul
 import numpy as np
+import random
+import numpy
+import numpy as np
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 db = myclient["appUser"]
@@ -224,5 +227,68 @@ def updateUser(id):
     collection.update_one(myquery,queryUpdate)
     return {"dato aggiornato": queryUpdate}
 
-f = open("myfile.txt","r")
-print(f.read())
+@app.get("/numberRandom")
+def numberRandom(p1:int, p2:int):
+    if p2 <=10 and p1 <=10:
+        p1 = random.randint(1,10)
+        p2 = random.randrange(1,10)
+        n = random.randrange(1,p2)
+        element = []
+        result = []
+        key = 1
+        while key <= p2:
+            key += 1
+            value = []
+            for n in range(p1):
+                n = random.randint(1,10)
+                print(n)
+                json_responseValue =n
+                value.append({"value":json_responseValue})
+                valueObject = random.randint(0,n)
+                for n  in value:
+                    valueObject = value
+                    valueFinal= valueObject
+                    print(valueFinal)
+            keyString = "element" + str(key -1)
+            element.append({keyString:valueFinal})
+        #print(element)
+            result =({"response": element, "p1Rand":p1, "p2Rand":p2})
+        return result
+    else:
+        if p1 >= 10 and p2 >= 10:
+            return {"error": "paramentri devono essere minori di 10"}
+        if p1 >= 10:
+            return {"error": "iL paramentro p1 deve essere minore di 10"}
+        elif p2 >= 10:
+            return {"error": "iL paramentro p2 deve essere minore di 10"}
+
+
+
+@app.get("/getArrayReverse")
+def arrayReverse(n:int):
+    randomlist = []
+    for i in range(n):
+        numberRandom = random.randint(1,30)
+        numberRandom2 = random.randint(1,10)
+        result = (numberRandom/numberRandom2)*2
+        if (result % 2) == 0:
+            randomlist.append(result)
+        else:
+            randomlist.append(0)
+        listReverse = randomlist[::-1]
+    if result:
+        return {"arrayIniziale": randomlist, "arrayReverse": listReverse}
+    elif (result % 2) == 0:
+        randomlist.append(result)
+        return {"solo_numeri_positvi":randomlist, "arrayReverse": listReverse}
+    else:
+        randomlist.append(-result)
+        return {"solo_numeri_negativi":"error"}
+    
+text1 = 'test'
+
+# replace √ with ascii value 
+print(ascii(text1))
+
+
+    
