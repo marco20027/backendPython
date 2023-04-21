@@ -270,21 +270,17 @@ def arrayReverse(n:int):
     for i in range(n):
         numberRandom = random.randint(1,30)
         numberRandom2 = random.randint(1,10)
-        result = (numberRandom/numberRandom2)*2
+        result = (numberRandom/numberRandom2)*2 
+        result = int(result)          
         if (result % 2) == 0:
-            randomlist.append(result)
+           randomlist.append(+result)
         else:
-            randomlist.append(0)
-        listReverse = randomlist[::-1]
+            randomlist.append(-result)
+        listReverse = [result for result in randomlist if result >= 0][::-1]
     if result:
-        return {"arrayIniziale": randomlist, "arrayReverse": listReverse}
-    elif (result % 2) == 0:
-        randomlist.append(result)
-        return {"solo_numeri_positvi":randomlist, "arrayReverse": listReverse}
+        return {"arrayIniziale": randomlist, "arrayFinale": listReverse}
     else:
-        randomlist.append(-result)
-        return {"solo_numeri_negativi":"error"}
-    
+        return {"error":"error"}
 
 
     
