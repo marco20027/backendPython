@@ -282,5 +282,30 @@ def arrayReverse(n:int):
     else:
         return {"error":"error"}
 
+@app.get("/multipliDiTre")
+def multipliDiTre(n:int):
+    list = []
+    for i in range(int(n)):
+        print("Enter number at index", i, )
+        item = int(input())
+        list.append(item)
+        print("User list is ", list)
+        listMultiplo = []
+        for x in list:
+            if(int(x) % 3) ==0:
+                print (x)
+                listMultiplo.append(x)
+                print(listMultiplo)
+                media =  numpy.mean(listMultiplo)
+    return {"list":list,"mediaMultipli3": media}
 
-    
+@app.get("/reverseArray")
+def reverseArray(n:int):
+    list = []
+    for x in range(n):
+        valueArray = random.randint(1,10)
+        list.append(valueArray)
+        print(list)
+        list.insert(10,list.pop(list.index(list[0])))
+        
+    print(list)
