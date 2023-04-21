@@ -285,10 +285,6 @@ def arrayReverse(n:int):
         randomlist.append(-result)
         return {"solo_numeri_negativi":"error"}
     
-text1 = 'test'
-
-# replace √ with ascii value 
-print(ascii(text1))
 
 
     
