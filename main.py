@@ -15,6 +15,7 @@ import numpy as np
 import random
 import numpy
 import numpy as np
+import math
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 db = myclient["appUser"]
@@ -301,11 +302,94 @@ def multipliDiTre(n:int):
 
 @app.get("/reverseArray")
 def reverseArray(n:int):
-    list = []
-    for x in range(n):
-        valueArray = random.randint(1,10)
-        list.append(valueArray)
-        print(list)
-        list.insert(10,list.pop(list.index(list[0])))
-        
-    print(list)
+    if n >= 6:
+        lista = []
+        for x in range(n):
+            finalList = []
+            valueArray = random.randint(1,10)
+            lista.append(valueArray)
+            for i in lista:
+                lista1 = lista[0]
+                lista2 = lista[-1]
+            print(lista)
+        print(lista[-2])
+        if n == 6:
+            finalList = lista1, lista2, lista[1], lista[-2],lista[2],lista[-3]
+        elif n==7:
+            finalList = lista1, lista2, lista[1], lista[-2],lista[2],lista[-3],lista[3]
+        elif n == 8:
+            finalList = lista1, lista2, lista[1], lista[-2],lista[2],lista[-3], lista [3], lista[-4]
+        elif n == 10:
+            finalList = lista1, lista2, lista[1], lista[-2],lista[2],lista[-3], lista [3], lista[-4], lista[4], lista[-5]
+        elif n == 16:
+            finalList = lista1, lista2, lista[1], lista[-2],lista[2],lista[-3], lista [3], lista[-4], lista[4], lista[-5],lista[5],lista[-6],lista[6],lista[-7],lista[7],lista[-8]
+
+        print(finalList)
+        return {"lista":lista, "listaFinale": finalList}
+    else:
+        print("error")
+
+
+
+@app.get("/sumElementArray")
+def sumElementArray(n:int):
+    lista = []
+    sumList = 0
+    sumOddList = 0
+    if n >= 6 :
+        for x in range(n):
+            valueArray = random.randint(1,10)
+            lista.append(valueArray)
+            print(lista)
+        for i in range(0, len(lista), 2):
+            sumList += (lista[i])
+            print(sumList)
+        for y in range(1,len(lista)):
+            if y% 2 != 0:
+                sumOddList +=(lista[y])
+                print(sumOddList)
+            else: 
+                print("errp")
+        if sumList == sumOddList:
+            sameResult = True
+        else:
+            sameResult = False
+            return {"lista": lista, "sommaPari": sumList, "sommaDispari":sumOddList,"risultatoUguale": sameResult}          
+    elif n < 6:
+        return {"error, parametro inferiore a 6":n }
+@app.get("/fattoriale")
+def fattoriale(n:int):
+    i=1
+    for y in range(1, n+1):
+        i*=y
+        print(i)
+    return {"numero":i}
+@app.get("/areaTrapezi")
+def areaTrapezi(a1:int,b1:int,h1:int,a2:int,b2:int,h2:int):
+    if a1 > 0 and b1 > 0 and h1 >0 and a2 > 0 and b2 >0 and h2 >0: 
+        area1 = ((a1+b1)*h1)/2
+        area2 = ((a2+b2)*h2)/2
+        if area1 > area2:
+            areamaggiore = area1
+        else:
+            areamaggiore = area2
+        return {"area1": area1, "area2":area2,"aereaMaggiore":areamaggiore}
+    else :
+        return {"errror, i paramentri di input devono essere maggiori di 0"}
+
+@app.get("/triangolo")
+def triangolo(l1:int,l2:int,l3:int):
+    p = l1 +l2 +l3
+    area = p/2 *((p/2)-l1)*((p/2)-l2)*((p/2)-l3)
+    result = math.sqrt(area)
+    
+    return {"perimetro": p , "area": result}
+
+
+@app.get("/annoBisestile")
+def annoBisestile(n:int):
+    if n%4 == 0 and n%100 != 0 or n%400 == 0:
+        return {"annoBisestile":n, "verifica": True}
+    else:
+        return {"annoNonBisestile":n, "verfica":False}
+    
