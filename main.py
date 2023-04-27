@@ -16,6 +16,8 @@ import random
 import numpy
 import numpy as np
 import math
+import csv
+
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 db = myclient["appUser"]
@@ -23,7 +25,6 @@ collection = db["user"]
 
 myUser = {"name": "marco", "cognome": "campanale", "dataNascita": "07-12-2002", "maggiorenne": True}
 #x = collection.insert_one(myUser)
-print(myUser)
 
 data = datetime.datetime
 
@@ -357,6 +358,9 @@ def sumElementArray(n:int):
             return {"lista": lista, "sommaPari": sumList, "sommaDispari":sumOddList,"risultatoUguale": sameResult}          
     elif n < 6:
         return {"error, parametro inferiore a 6":n }
+    
+
+
 @app.get("/fattoriale")
 def fattoriale(n:int):
     i=1
@@ -364,6 +368,8 @@ def fattoriale(n:int):
         i*=y
         print(i)
     return {"numero":i}
+
+
 @app.get("/areaTrapezi")
 def areaTrapezi(a1:int,b1:int,h1:int,a2:int,b2:int,h2:int):
     if a1 > 0 and b1 > 0 and h1 >0 and a2 > 0 and b2 >0 and h2 >0: 
@@ -393,3 +399,18 @@ def annoBisestile(n:int):
     else:
         return {"annoNonBisestile":n, "verfica":False}
     
+
+@app.get("/returnMaxValue")
+def returnMaxValue(n:int):
+    lista= []
+    if n > 4 and n < 100:
+        for i in range(n):
+            elementArray= random.randint(n,100)
+            lista.append(elementArray)
+            maxValue = max(lista)
+        return {"lista": lista, "maxValue": maxValue}
+    else:
+        return {"error , messaggio di warning"}
+
+
+
