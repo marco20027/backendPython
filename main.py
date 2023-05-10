@@ -450,5 +450,5 @@ url = "http://localhost:4200/"
 response = requests.get(url)
 print(response.status_code)
 soup = BeautifulSoup(response.text, 'html.parser')
-table = soup.find('app-root', class_ = 'table-resp')
+table = soup.find('app-root')
 print(table)
