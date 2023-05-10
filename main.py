@@ -18,7 +18,8 @@ import numpy as np
 import math
 import csv
 from fastapi.encoders import jsonable_encoder
-
+from bs4 import BeautifulSoup
+from fastapi.middleware.cors import CORSMiddleware
 
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -420,10 +421,23 @@ def returnJson():
     with open ("posWIMTres_HO.json") as file:
         data = json.load(file)
     return(data)
+
+origins = [
+   "http://localhost:8080","http://localhost:4200"
+]
+app.add_middleware(
+   CORSMiddleware,
+   allow_origins=origins,
+   allow_credentials=True,
+   allow_methods=["*"],
+   allow_headers=["*"],
+)
+
 @app.post("/updateJson")
 def updateJson():
-    with open("posWIMTres_HO.json") as file:
-        data = {"key":"test1"}
+    with open("demo.json") as file:
+       data = json.load(file)
+    print(data)
     mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
     db = mongoClient["dbCSV"]
     col = db["csv"]
@@ -431,6 +445,10 @@ def updateJson():
     for i in col.find():
         print(i)
     return {"messagge":"success"}
-@app.get("/getIdJson")
-def returdId():
-    return
+
+url = "http://localhost:4200/" 
+response = requests.get(url)
+print(response.status_code)
+soup = BeautifulSoup(response.text, 'html.parser')
+table = soup.find('app-root', class_ = 'table-resp')
+print(table)
