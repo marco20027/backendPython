@@ -36,5 +36,4 @@ def csv_to_json(csvFilePath, jsonFilePath):
           
 csvFilePath = r'posWIMTres_HO.csv'
 jsonFilePath = r'data.json'
-print(jsonFilePath)
 csv_to_json(csvFilePath, jsonFilePath)
