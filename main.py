@@ -423,7 +423,7 @@ def returnJson():
     return(data)
 
 origins = [
-   "http://localhost:8080","http://localhost:4200"
+   "http://localhost:8000","http://localhost:4200"
 ]
 app.add_middleware(
    CORSMiddleware,
@@ -446,9 +446,11 @@ def updateJson():
         print(i)
     return {"messagge":"success"}
 
-url = "http://localhost:4200/" 
-response = requests.get(url)
-print(response.status_code)
-soup = BeautifulSoup(response.text, 'html.parser')
-table = soup.find('app-root')
-print(table)
+
+@app.get("/{id}")
+def returnId(id:str):
+    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
+    db = mongoClient["dbCSV"]
+    col = db["csv"]
+    return {"id":id}
+    
