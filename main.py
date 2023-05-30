@@ -11,7 +11,6 @@ from pydantic import BaseModel
 import datetime
 from functools import reduce
 from operator import mul
-import numpy as np
 import random
 import numpy
 import numpy as np
@@ -20,6 +19,7 @@ import csv
 from fastapi.encoders import jsonable_encoder
 from bs4 import BeautifulSoup
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 
 myclient = pymongo.MongoClient("mongodb://localhost:27017/")
@@ -433,24 +433,98 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-@app.post("/updateJson")
-def updateJson():
-    with open("demo.json") as file:
-       data = json.load(file)
+
+
+from bson import Binary, Code, ObjectId
+from bson.json_util import dumps
+
+@app.get("/returnCollection")
+def returnCollection():
+    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
+    db = mongoClient["dvCSV"]
+    cursor = db['csv'].find()
+    data = []
+    for doc in cursor:
+        doc['_id'] = str(doc['_id']) 
+        data.append(doc)
+    return data
+
+@app.get("/data/{id}")
+def getId(id:str):
+    print("chiamata alla get id" + " " + id )
+    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
+    db = mongoClient["dvCSV"]
+    cursor = db['csv'].find({'_id':ObjectId(id)})
+    data = []
+    for doc in cursor:
+        doc['_id'] = str(doc['_id']) 
+        data.append(doc)
+    print("contenuto di data ")
     print(data)
-    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
-    db = mongoClient["dbCSV"]
-    col = db["csv"]
-    x = col.insert_one(data)
-    for i in col.find():
-        print(i)
-    return {"messagge":"success"}
+    return data
 
+class UploadData(BaseModel):
+    _id:str
+    Entity: str
+    Isin:str
+    InstrumentName:str
+    MaturityDate:str
+    IssuerName:str
+    IssuerCode:int
+    Currency:str
+    MarketCode:str
+    AgentName:str
+    SettledQty:int
+    LatestCleanPrice:int
+    LatestDirtyPrice:int
+    PriceSource:str
+    SettledValue:str
+    BVALScore:str
+    EligibileBCE:bool
+    EligibileFED:bool
+    EligibileHKM:bool
+    EligibileBOE:bool
+    Marketability:str
+    LiquidityClass:str
+    LiquidityClassHaircut:int
+    LiquidityClassStressHaircut:int
+    LiquidityClassPolicyHaircut:int
+    LiquidityTypeName:str
+    SecurityTypeName:str
+    BBGLiquidityClassDate:str
+    BBGLiquidityClass:str
+    LRSNarrative:str
+    BloombergCode:str
 
-@app.get("/{id}")
-def returnId(id:str):
+print(UploadData)
+
+@app.post("/updateData/{id}")
+def updateData(data:UploadData,id:str):
     mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
-    db = mongoClient["dbCSV"]
+    db = mongoClient["dvCSV"]
     col = db["csv"]
-    return {"id":id}
-    
+    lista = []
+    idObject = db['csv'].find({'_id':ObjectId(id)})
+    for doc in idObject:
+        doc['_id'] = str(doc['_id']) 
+        lista.append(doc)
+    lista = dict(data)
+    filter = { '_id': id }
+    newvalues = { "$set": { id: lista } }
+    insert = col.update_one(filter, newvalues)
+    return {"result":data}
+  
+@app.delete("/deleteData/{id}")
+def deleteData(data:UploadData,id:str):
+    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
+    db = mongoClient["dvCSV"]
+    col = db["csv"]
+    lista = []
+    idObject = db['csv'].find({'_id':ObjectId(id)})
+    for doc in idObject:
+        doc['_id'] = str(doc['_id']) 
+        lista.append(doc)
+    lista = dict(data)
+    col.delete_one(lista)
+    return {"user eliminato": lista}
+       
