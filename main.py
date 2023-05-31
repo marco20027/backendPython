@@ -534,7 +534,6 @@ def deleteData(id:str):
     mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
     db = mongoClient["dvCSV"]
     col = db["csv"]
-    lista = []
     idObject = db['csv'].find({'_id':ObjectId(id)})
     for doc in idObject:
         col.delete_one(doc)
