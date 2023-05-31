@@ -536,7 +536,10 @@ def deleteData(id:str):
     col = db["csv"]
     idObject = db['csv'].find({'_id':ObjectId(id)})
     for doc in idObject:
-        col.delete_one(doc)
-    
-    return {"user eliminato": doc}
+        print(doc)
+        col.delete_one(dict(doc))
+    lista = []
+    lista.append(dict(doc))
+    print(lista)
+    return {"data id": id}
        
