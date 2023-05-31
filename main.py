@@ -464,31 +464,31 @@ def getId(id:str):
     return data
 
 class UploadData(BaseModel):
-    _id:str
+    _id:ObjectId
     Entity: str
     Isin:str
     InstrumentName:str
     MaturityDate:str
     IssuerName:str
-    IssuerCode:int
+    IssuerCode:str
     Currency:str
     MarketCode:str
     AgentName:str
-    SettledQty:int
-    LatestCleanPrice:int
-    LatestDirtyPrice:int
+    SettledQty:str
+    LatestCleanPrice:str
+    LatestDirtyPrice:str
     PriceSource:str
     SettledValue:str
     BVALScore:str
-    EligibileBCE:bool
-    EligibileFED:bool
-    EligibileHKM:bool
-    EligibileBOE:bool
+    EligibileBCE:str
+    EligibileFED:str
+    EligibileHKM:str
+    EligibileBOE:str
     Marketability:str
     LiquidityClass:str
-    LiquidityClassHaircut:int
-    LiquidityClassStressHaircut:int
-    LiquidityClassPolicyHaircut:int
+    LiquidityClassHaircut:str
+    LiquidityClassStressHaircut:str
+    LiquidityClassPolicyHaircut:str
     LiquidityTypeName:str
     SecurityTypeName:str
     BBGLiquidityClassDate:str
@@ -500,6 +500,7 @@ print(UploadData)
 
 @app.post("/updateData/{id}")
 def updateData(data:UploadData,id:str):
+    print("inizio metodo updateData")
     mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
     db = mongoClient["dvCSV"]
     col = db["csv"]
@@ -509,22 +510,34 @@ def updateData(data:UploadData,id:str):
         doc['_id'] = str(doc['_id']) 
         lista.append(doc)
     lista = dict(data)
-    filter = { '_id': id }
-    newvalues = { "$set": { id: lista } }
+    filter = { '_id': ObjectId(id) }
+    print(filter)
+    newvalues = { "$set": lista  }
+    print(newvalues)
+    print("fine metodo updateData")
     insert = col.update_one(filter, newvalues)
-    return {"result":data}
-  
+    return {"result":insert.upserted_id}
+
+@app.post("/insertData")
+def insertData(data:UploadData):
+    mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
+    db = mongoClient["dvCSV"]
+    col = db["csv"]
+    col.insert_one(dict(data))
+    return {"dato inserito": data}
+
+from bson import ObjectId
+
+
 @app.delete("/deleteData/{id}")
-def deleteData(data:UploadData,id:str):
+def deleteData(id:str):
     mongoClient = pymongo.MongoClient("mongodb://localhost:27017")
     db = mongoClient["dvCSV"]
     col = db["csv"]
     lista = []
     idObject = db['csv'].find({'_id':ObjectId(id)})
     for doc in idObject:
-        doc['_id'] = str(doc['_id']) 
-        lista.append(doc)
-    lista = dict(data)
-    col.delete_one(lista)
-    return {"user eliminato": lista}
+        col.delete_one(doc)
+    
+    return {"user eliminato": doc}
        
