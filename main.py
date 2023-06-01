@@ -479,6 +479,7 @@ class UploadData(BaseModel):
     LatestDirtyPrice:str
     PriceSource:str
     SettledValue:str
+    Current6A6Value:str
     BVALScore:str
     EligibileBCE:str
     EligibileFED:str
