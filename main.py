@@ -463,33 +463,36 @@ def getId(id:str):
     print(data)
     return data
 
+from datetime import datetime
+
+
 class UploadData(BaseModel):
     _id:ObjectId
     Entity: str
     Isin:str
     InstrumentName:str
-    MaturityDate:str
+    MaturityDate:datetime
     IssuerName:str
-    IssuerCode:str
+    IssuerCode:int
     Currency:str
     MarketCode:str
     AgentName:str
-    SettledQty:str
-    LatestCleanPrice:str
-    LatestDirtyPrice:str
+    SettledQty:int
+    LatestCleanPrice:float
+    LatestDirtyPrice:float
     PriceSource:str
-    SettledValue:str
+    SettledValue:float
     Current6A6Value:str
     BVALScore:str
-    EligibileBCE:str
-    EligibileFED:str
-    EligibileHKM:str
-    EligibileBOE:str
+    EligibileBCE:bool
+    EligibileFED:bool
+    EligibileHKM:bool
+    EligibileBOE:bool
     Marketability:str
     LiquidityClass:str
-    LiquidityClassHaircut:str
-    LiquidityClassStressHaircut:str
-    LiquidityClassPolicyHaircut:str
+    LiquidityClassHaircut:int
+    LiquidityClassStressHaircut:int
+    LiquidityClassPolicyHaircut:int
     LiquidityTypeName:str
     SecurityTypeName:str
     BBGLiquidityClassDate:str
@@ -517,6 +520,7 @@ def updateData(data:UploadData,id:str):
     print(newvalues)
     print("fine metodo updateData")
     insert = col.update_one(filter, newvalues)
+    print(data.MaturityDate)
     return {"result":insert.upserted_id}
 
 @app.post("/insertData")
