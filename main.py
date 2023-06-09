@@ -538,5 +538,6 @@ def deleteData(id:str):
         col.delete_one(dict(doc))
     lista = []
     lista.append(dict(doc))
+    print(lista)
     return {"data id": id}
        
