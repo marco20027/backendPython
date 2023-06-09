@@ -433,8 +433,6 @@ app.add_middleware(
    allow_headers=["*"],
 )
 
-
-
 from bson import Binary, Code, ObjectId
 from bson.json_util import dumps
 
@@ -460,7 +458,6 @@ def getId(id:str):
         doc['_id'] = str(doc['_id']) 
         data.append(doc)
     print("contenuto di data ")
-    print(data)
     return data
 
 from datetime import datetime
@@ -500,7 +497,7 @@ class UploadData(BaseModel):
     LRSNarrative:str
     BloombergCode:str
 
-print(UploadData)
+
 
 @app.post("/updateData/{id}")
 def updateData(data:UploadData,id:str):
@@ -515,12 +512,9 @@ def updateData(data:UploadData,id:str):
         lista.append(doc)
     lista = dict(data)
     filter = { '_id': ObjectId(id) }
-    print(filter)
     newvalues = { "$set": lista  }
-    print(newvalues)
     print("fine metodo updateData")
     insert = col.update_one(filter, newvalues)
-    print(data.MaturityDate)
     return {"result":insert.upserted_id}
 
 @app.post("/insertData")
@@ -541,10 +535,8 @@ def deleteData(id:str):
     col = db["csv"]
     idObject = db['csv'].find({'_id':ObjectId(id)})
     for doc in idObject:
-        print(doc)
         col.delete_one(dict(doc))
     lista = []
     lista.append(dict(doc))
-    print(lista)
     return {"data id": id}
        
